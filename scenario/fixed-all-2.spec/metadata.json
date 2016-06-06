@@ -1,0 +1,4 @@
+{
+  "type": "puppet",
+  "operating-systems": ["ubuntu-14.04"]
+}

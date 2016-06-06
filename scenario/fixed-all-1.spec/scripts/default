@@ -1,0 +1,29 @@
+package { 'unzip':
+  ensure  => present,
+  before  => Exec['unzip']
+}
+
+exec { 'download':
+  command => '/bin/echo "UEsDBAoAAAAAABhmxEgEwxjDJAAAACQAAAAIABwATWFrZWZpbGVVVAkAAxCyUlcTslJXdXgLAAEE6AMAAAToAwAAaW5zdGFsbDoKCXRvdWNoIC91c3IvYmluL2dsYXNzZmlzaAoKUEsBAh4DCgAAAAAAGGbESATDGMMkAAAAJAAAAAgAGAAAAAAAAQAAAKSBAAAAAE1ha2VmaWxlVVQFAAMQslJXdXgLAAEE6AMAAAToAwAAUEsFBgAAAAABAAEATgAAAGYAAAAAAA==" | /usr/bin/base64 -d > /tmp/gf.zip',
+  creates => '/tmp/gf.zip',
+  unless  => '/usr/bin/test -e /opt/glassfish'
+}
+
+exec { 'unzip':
+  command => '/usr/bin/unzip -u /tmp/gf.zip -d /opt/glassfish',
+  onlyif  => '/usr/bin/test -e /tmp/gf.zip',
+  require => Exec['download']
+}
+
+file { 'remove':
+  path    => '/tmp/gf.zip',
+  ensure  => absent,
+  require => Exec['unzip']
+}
+
+exec { 'install':
+  command => '/usr/bin/make -C /opt/glassfish install',
+  creates => '/usr/bin/glassfish',
+  require => Exec['unzip']
+}
+
