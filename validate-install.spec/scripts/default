@@ -1,0 +1,3 @@
+exec { 'print hello world':
+  command => '/bin/echo Hello World!'
+}
