@@ -1,0 +1,10 @@
+exec { 'write 1':
+  command => '/bin/echo 1 > /tmp/setting',
+  unless  => '/bin/grep 1 /tmp/setting'
+}
+
+exec { 'write 2':
+  command => '/bin/echo 2 > /tmp/setting',
+  unless  => '/bin/grep 2 /tmp/setting'
+}
+
